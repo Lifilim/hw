@@ -1,6 +1,7 @@
 #include<iostream>
 #include<iomanip>
 #include<fstream>
+#include<sstream>
 
 #include<numeric>
 #include<algorithm>
@@ -10,8 +11,6 @@
 #include<vector>
 #include<set>
 #include<map>
-#include<queue>
-#include<stack>
 #include<string>
 #include<cstring>
 #include<array>
@@ -68,6 +67,9 @@ struct queue {
         --SIZE;
         return value;
     }
+    void make_empty() {
+        while (!empty()) pop();
+    }
     int size() {
         return SIZE;
     }
@@ -94,17 +96,17 @@ struct queue {
 
 
 template<typename T>
-class tree {
-private:
+struct tree {
     struct node {
         T val;
-        tree* left = nullptr;
-        tree* right = nullptr;
-        tree* parent = nullptr;
+        node* left = nullptr;
+        node* right = nullptr;
+        node* parent = nullptr;
     };
     node* root = nullptr;
 
-    public:
+//////////////////////////////////////////////////
+
     void add(T x) {
         node *n = new node;
         n->val = x;
@@ -127,7 +129,7 @@ private:
                         t->left = n;
                         break;
                     }
-        } else this = n;
+        } else this->root = n;
     }
 
     void input() {
@@ -138,28 +140,33 @@ private:
         while (sin >> v) add(v);
     }
 
-    void inorder(auto comp, node* v = nullptr, bool ok = true) {
-        if (ok && v == nullptr) v = root;
-        if (v) {
-            this->tree::inorder(comp, v->left, false);
-            //if (v->left && !v->right)
-            if (comp)
-                cout << v->val << ' ';
-            this->tree::inorder(comp, v->right, false);
-        }
-    }
-
-    node* find(T x, node *v = root) {
+    node* find(T x, node *v) {
         if (!v || v->val) return v;
         if (x < v->val) return find(x, v->left);
         else return find(x, v->right);
+    }
+
+    void inorder_(queue<T> &res, auto comp, node* v = root) {
+        if (v) {
+            inorder_(res, comp, v->left);
+            if (comp(v)) res.push(v->val);
+            inorder_(res, comp, v->right);
+        }
+    }
+    queue<T> inorder(auto comp, node* v) {
+        queue<T> res;
+        inorder_(res, comp, v);
+        return res;
     }
 };
 
 
 void solve1() {
     tree<int> tr;
-    tr.inorder([](auto v) {return v->left && !v->right; });
+    tr.input();
+    queue<int> ans = tr.inorder([](auto v) {return v->left && !v->right; }, tr.root);
+    if (!ans.empty()) cout << "Answer: " << ans;
+    else cout << "no such vertexes";
     cout << '\n';
 }
 
@@ -180,8 +187,9 @@ int main() {
     cout << fixed << setprecision(21);
 
     int num = -1;
+    cout << "Enter task numder: ";
     while (cin >> num && num > -1) {
-        cin >> num;
+        cin.get();
         switch (num) {
         case 1: // number of vertices with one left child
             solve1();
@@ -200,6 +208,9 @@ int main() {
             num = -1;
             break;
         }
+        cout << '\n';
+        if (num > -1) 
+            cout << "Enter task numder: ";
     }
 }
 
