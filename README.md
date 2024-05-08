@@ -1,2 +1,1 @@
-These are my works on various subjects at SSU ⁠*⁠.⁠✧⁠◝⁠(⁠⁰⁠▿⁠⁰⁠)⁠◜⁠✧｡⁠ﾟ <br />
-(⁠＾⁠∇⁠＾⁠)⁠ﾉ Each work is located in its own branch
+These are my works on Computer Science and Programming (⁠ﾉ⁠◕⁠ヮ⁠◕⁠)⁠ﾉ⁠*⁠.⁠✧
