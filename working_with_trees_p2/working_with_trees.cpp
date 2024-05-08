@@ -146,7 +146,7 @@ struct tree {
         else return find(x, v->right);
     }
 
-    void inorder_(queue<T> &res, auto comp, node* v = root) {
+    void inorder_(queue<T> &res, auto comp, node* v) {
         if (v) {
             inorder_(res, comp, v->left);
             if (comp(v)) res.push(v->val);
@@ -158,6 +158,11 @@ struct tree {
         inorder_(res, comp, v);
         return res;
     }
+
+    int deep(node* v) {
+        if (v) return max(deep(v->left), deep(v->right)) + 1;
+        return 0;
+    }
 };
 
 
@@ -165,13 +170,19 @@ void solve1() {
     tree<int> tr;
     tr.input();
     queue<int> ans = tr.inorder([](auto v) {return v->left && !v->right; }, tr.root);
-    if (!ans.empty()) cout << "Answer: " << ans;
-    else cout << "no such vertexes";
+
+    cout << "Answer: " << ans.SIZE << '\n';
+    if (!ans.empty()) 
+        cout << "These are " << ans;
+    else              
+        cout << "No such vertexes";
     cout << '\n';
 }
 
 void solve2() {
-    cout << '\n';
+    tree<int> tr;
+    tr.input();
+    cout << "Answer: " << tr.deep(tr.root) << '\n';
 }
 
 void solve3() {
