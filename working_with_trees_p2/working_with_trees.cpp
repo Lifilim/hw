@@ -95,6 +95,8 @@ struct queue {
 
 
 
+
+
 template<typename T>
 struct tree {
     struct node {
@@ -112,8 +114,8 @@ struct tree {
         n->val = x;
         if (this->root) {
             node *t = this->root;
-            while (t) 
-                if (n->val > t->val) 
+            while (t)
+                if (n->val > t->val)
                     if (t->right)
                         t = t->right;
                     else {
@@ -159,8 +161,8 @@ struct tree {
         return res;
     }
 
-    int deep(node* v) {
-        if (v) return max(deep(v->left), deep(v->right)) + 1;
+    int depth(node* v) {
+        if (v) return max(depth(v->left), depth(v->right)) + 1;
         return 0;
     }
 };
@@ -172,24 +174,90 @@ void solve1() {
     queue<int> ans = tr.inorder([](auto v) {return v->left && !v->right; }, tr.root);
 
     cout << "Answer: " << ans.SIZE << '\n';
-    if (!ans.empty()) 
+    if (!ans.empty())
         cout << "These are " << ans;
-    else              
-        cout << "No such vertexes";
+    else
+        cout << "No such vertices";
     cout << '\n';
 }
 
 void solve2() {
     tree<int> tr;
     tr.input();
-    cout << "Answer: " << tr.deep(tr.root) << '\n';
+    cout << "Answer: " << tr.depth(tr.root) << '\n';
 }
 
+
+
+template<typename T>
+struct tree_AVL {
+    struct node {
+        T val;
+        node* left = nullptr;
+        node* right = nullptr;
+    };
+    node* root = nullptr;
+
+    //////////////////////////////////////////////////
+
+    void input_(node *&t, int n, queue<T> &q) {
+        if (n <= 0) return;
+        t = new node;
+        t->val = q.pop();
+        input_(t->left, n / 2, q);
+        input_(t->right, n - n / 2 - 1, q);
+    }
+
+    void input() {
+        string s;
+        getline(cin, s);
+        stringstream sin(s);
+        queue<T> q;
+        T v;
+        while (sin >> v) q.push(v);
+        input_(root, q.SIZE, q);
+    }
+
+    T sum_leaves(node* tr) {
+        if (!tr->left && !tr->right)
+            return tr->val;
+        if (!tr->left && tr->right)
+            return sum_leaves(tr->right);
+        if (tr->left && !tr->right)
+            return sum_leaves(tr->left);
+        if (tr->left && tr->right)
+            return sum_leaves(tr->left) + sum_leaves(tr->right);
+    }
+
+    void level_vertices_(node* tr, int k, queue<T> &q) {
+        if (k == 1) return q.push(tr->val);
+        if (tr->left) level_vertices_(tr->left, k - 1, q);
+        if (tr->right) level_vertices_(tr->right, k - 1, q);
+    }
+    queue<T> level_vertices(int k) {
+        assert(k > 0);
+        queue<T> q;
+        level_vertices_(root, k, q);
+        return q;
+    }
+
+};
+
+
 void solve3() {
+    tree_AVL<int> tr;
+    tr.input();
+    cout << tr.sum_leaves(tr.root);
     cout << '\n';
 }
 
 void solve4() {
+    tree_AVL<int> tr;
+    tr.input();
+    int k;
+    cout << "Enter level k: ";
+    cin >> k;
+    cout << tr.level_vertices(k);
     cout << '\n';
 }
 
@@ -205,13 +273,13 @@ int main() {
         case 1: // number of vertices with one left child
             solve1();
             break;
-        case 2:
+        case 2: // tree depth
             solve2();
             break;
-        case 3:
+        case 3: // leaves' sum
             solve3();
             break;
-        case 4:
+        case 4: // vertices of level k
             solve4();
             break;
         default:
@@ -220,7 +288,7 @@ int main() {
             break;
         }
         cout << '\n';
-        if (num > -1) 
+        if (num > -1)
             cout << "Enter task numder: ";
     }
 }
