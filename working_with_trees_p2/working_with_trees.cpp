@@ -114,8 +114,8 @@ struct tree {
         n->val = x;
         if (this->root) {
             node *t = this->root;
-            while (t)
-                if (n->val > t->val)
+            while (t) 
+                if (n->val > t->val) 
                     if (t->right)
                         t = t->right;
                     else {
@@ -148,16 +148,16 @@ struct tree {
         else return find(x, v->right);
     }
 
-    void inorder_(queue<T> &res, auto comp, node* v) {
+    void vertices_inorder_(queue<T>& res, auto comp, node* v) {
         if (v) {
-            inorder_(res, comp, v->left);
+            vertices_inorder_(res, comp, v->left);
             if (comp(v)) res.push(v->val);
-            inorder_(res, comp, v->right);
+            vertices_inorder_(res, comp, v->right);
         }
     }
-    queue<T> inorder(auto comp, node* v) {
+    queue<T> vertices_inorder(auto comp, node* v) {
         queue<T> res;
-        inorder_(res, comp, v);
+        vertices_inorder_(res, comp, v);
         return res;
     }
 
@@ -165,26 +165,55 @@ struct tree {
         if (v) return max(depth(v->left), depth(v->right)) + 1;
         return 0;
     }
+
+    void inorder_(queue<T>& res, node* v) {
+        if (v) {
+            inorder_(res, v->left);
+            res.push(v->val);
+            inorder_(res, v->right);
+        }
+    }
+    queue<T> inorder() {
+        queue<T> res;
+        inorder_(res, root);
+        return res;
+    }
+    void preorder_(queue<T>& res, node* v) {
+        if (v) {
+            res.push(v->val);
+            preorder_(res, v->left);
+            preorder_(res, v->right);
+        }
+    }
+    queue<T> preorder() {
+        queue<T> res;
+        preorder_(res, root);
+        return res;
+    }
 };
 
 
 void solve1() {
     tree<int> tr;
     tr.input();
-    queue<int> ans = tr.inorder([](auto v) {return v->left && !v->right; }, tr.root);
+    queue<int> ans = tr.vertices_inorder([](auto v) {return v->left && !v->right; }, tr.root);
 
     cout << "Answer: " << ans.SIZE << '\n';
-    if (!ans.empty())
+    if (!ans.empty()) 
         cout << "These are " << ans;
-    else
+    else              
         cout << "No such vertices";
     cout << '\n';
+    cout << "Inorder: " << tr.inorder() << '\n';
+    cout << "Preorder: " << tr.preorder() << '\n';
 }
 
 void solve2() {
     tree<int> tr;
     tr.input();
     cout << "Answer: " << tr.depth(tr.root) << '\n';
+    cout << "Inorder: " << tr.inorder() << '\n';
+    cout << "Preorder: " << tr.preorder() << '\n';
 }
 
 
@@ -228,7 +257,7 @@ struct tree_AVL {
         if (tr->left && tr->right)
             return sum_leaves(tr->left) + sum_leaves(tr->right);
     }
-
+    
     void level_vertices_(node* tr, int k, queue<T> &q) {
         if (k == 1) return q.push(tr->val);
         if (tr->left) level_vertices_(tr->left, k - 1, q);
@@ -241,14 +270,38 @@ struct tree_AVL {
         return q;
     }
 
+    void inorder_(queue<T>& res, node* v) {
+        if (v) {
+            inorder_(res, v->left);
+            res.push(v->val);
+            inorder_(res, v->right);
+        }
+    }
+    queue<T> inorder() {
+        queue<T> res;
+        inorder_(res, root);
+        return res;
+    }
+    void preorder_(queue<T>& res, node* v) {
+        if (v) {
+            res.push(v->val);
+            preorder_(res, v->left);
+            preorder_(res, v->right);
+        }
+    }
+    queue<T> preorder() {
+        queue<T> res;
+        preorder_(res, root);
+        return res;
+    }
 };
 
 
 void solve3() {
     tree_AVL<int> tr;
     tr.input();
-    cout << tr.sum_leaves(tr.root);
-    cout << '\n';
+    cout << "Answer: " << tr.sum_leaves(tr.root) << '\n';
+    cout << "Preorder: " << tr.preorder() << '\n';
 }
 
 void solve4() {
@@ -257,8 +310,8 @@ void solve4() {
     int k;
     cout << "Enter level k: ";
     cin >> k;
-    cout << tr.level_vertices(k);
-    cout << '\n';
+    cout << "Answer: " << tr.level_vertices(k) << '\n';
+    cout << "Preorder: " << tr.preorder() << '\n';
 }
 
 int main() {
@@ -288,7 +341,7 @@ int main() {
             break;
         }
         cout << '\n';
-        if (num > -1)
+        if (num > -1) 
             cout << "Enter task numder: ";
     }
 }
