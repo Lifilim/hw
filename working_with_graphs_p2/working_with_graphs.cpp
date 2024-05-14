@@ -72,8 +72,34 @@ void solve1() {
 }
 
 void solve2() {
-   
-    cout << "Answer: "<< '\n';
+    int n, m;
+    cout << "Enter vertices and edges number: ";
+    cin >> n >> m;
+    if (n <= 0 || m < 0) {
+        cout << "It isn't a graph!\n";
+        return;
+    }
+    vector<vector<int>> g(n);
+    if (m > 0) cout << "Enter edges: \n";
+    forn(mm, m) {
+        int v, u;
+        cin >> v >> u;
+        g[v - 1].pb(u - 1);
+        if (v != u) g[u - 1].pb(v - 1);
+    }
+    int a, b;
+    cout << "Enter edge (A and B): ";
+    cin >> a >> b;
+    --a, --b;
+    auto ita = find(all(g[a]), b);
+    if (ita == g[a].end()) cout << "No such edge\n";
+    else {
+        g[a].erase(ita);
+        auto itb = find(all(g[b]), a);
+        if (itb != g[b].end()) g[b].erase(itb);
+        cout << "The rest of the edges: " << '\n';
+        forn(v, n) for (int u : g[v]) if (v <= u) cout << v + 1 << ' ' << u + 1 << '\n';
+    }
 }
 
 void solve3() {
@@ -104,16 +130,16 @@ int main() {
         case 1: // print all vertices not adjacent to this one
             solve1();
             break;
-        case 2: // tree depth
+        case 2: // remove edge
             solve2();
             break;
-        case 3: // leaves' sum
+        case 3: // 
             solve3();
             break;
-        case 4: // vertices of level k
+        case 4: // 
             solve4();
             break;
-        case 5: // vertices of level k
+        case 5: // 
             solve5();
             break;
         default:
