@@ -98,13 +98,34 @@ void solve2() {
         auto itb = find(all(g[b]), a);
         if (itb != g[b].end()) g[b].erase(itb);
         cout << "The rest of the edges: " << '\n';
-        forn(v, n) for (int u : g[v]) if (v <= u) cout << v + 1 << ' ' << u + 1 << '\n';
+        bool ex = false;
+        forn(v, n) for (int u : g[v]) if (v <= u) {
+            cout << v + 1 << ' ' << u + 1 << '\n';
+            ex = true;
+        }
+        if (!ex) cout << "no such edges\n";
     }
 }
 
 void solve3() {
-   
+    int n, m;
+    cout << "Enter vertices and edges number: ";
+    cin >> n >> m;
+    if (n <= 0 || m < 0) {
+        cout << "It isn't a graph!\n";
+        return;
+    }
+    vector<vector<int>> g(n);
+    if (m > 0) cout << "Enter edges: \n";
+    forn(mm, m) {
+        int v, u;
+        cin >> v >> u;
+        g[v - 1].pb(u - 1);
+    }
     cout << "Answer: "<< '\n';
+    forn(i, n) 
+        cout << "for " << i + 1 << " vertex: " << g[i].size() << '\n';
+    
 }
 
 void solve4() {
@@ -133,7 +154,7 @@ int main() {
         case 2: // remove edge
             solve2();
             break;
-        case 3: // 
+        case 3: // calculate the outdegree of each vertex
             solve3();
             break;
         case 4: // 
