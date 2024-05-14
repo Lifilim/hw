@@ -128,9 +128,33 @@ void solve3() {
     
 }
 
+void dfs(vector<vector<int>>& g, int v, vector<bool>& visited) {
+    visited[v] = true;
+    for (int u : g[v])
+        if (!visited[u]) dfs(g, u, visited);
+}
+
 void solve4() {
-   
-    cout << "Answer: "<< '\n';
+    int n, m;
+    cout << "Enter vertices and edges number: ";
+    cin >> n >> m;
+    if (n <= 0 || m < 0) {
+        cout << "It isn't a graph!\n";
+        return;
+    }
+    vector<vector<int>> g(n);
+    if (m > 0) cout << "Enter edges: \n";
+    forn(mm, m) {
+        int v, u;
+        cin >> v >> u;
+        g[v - 1].pb(u - 1);
+        if (v != u) g[u - 1].pb(v - 1);
+    }
+    vector<bool> visited(n);
+    dfs(g, 0, visited);
+    bool connected = true;
+    forn(i, n) connected = connected && visited[i];
+    cout << "Answer: " << (connected ? "YES" : "NO" ) << '\n';
 }
 
 void solve5() {
@@ -157,7 +181,7 @@ int main() {
         case 3: // calculate the outdegree of each vertex
             solve3();
             break;
-        case 4: // 
+        case 4: // is the graph connected
             solve4();
             break;
         case 5: // 
