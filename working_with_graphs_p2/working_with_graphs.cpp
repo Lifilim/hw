@@ -9,6 +9,7 @@
 #include<cassert>
 
 #include<vector>
+#include<queue>
 #include<set>
 #include<map>
 #include<string>
@@ -158,8 +159,50 @@ void solve4() {
 }
 
 void solve5() {
-   
-    cout << "Answer: "<< '\n';
+    int n, m;
+    cout << "Enter vertices and edges number: ";
+    cin >> n >> m;
+    if (n <= 0 || m < 0) {
+        cout << "It isn't a graph!\n";
+        return;
+    }
+    vector<vector<int>> g(n);
+    if (m > 0) cout << "Enter edges: \n";
+    forn(mm, m) {
+        int v, u;
+        cin >> v >> u;
+        g[v - 1].pb(u - 1);
+        if (v != u) g[u - 1].pb(v - 1);
+    }
+    int a, b;
+    cout << "Enter vertices A and B: ";
+    cin >> a >> b;
+    --a, --b;
+    vector<int> prev(n, -1);
+    queue<int> q;
+    q.push(a);
+    prev[a] = a;
+    while (!q.empty()) {
+        int v = q.front();
+        q.pop();
+        for (int u : g[v]) 
+            if (prev[u] == -1) {
+                q.push(u);
+                prev[u] = v;
+                if (u == b) break;
+            }
+    }
+    if (prev[b] > -1) {
+        cout << "Answer: ";
+        int w = b;
+        vector<int> path = { w };
+        while (w != a) {
+            w = prev[w];
+            path.pb(w);
+        }
+        rforn(i, path.size()) cout << path[i] + 1 << ' ';
+        cout << '\n';
+    } else cout << "these vertices aren't connected\n";
 }
 
 
@@ -184,7 +227,7 @@ int main() {
         case 4: // is the graph connected
             solve4();
             break;
-        case 5: // 
+        case 5: // shortest path between vertices
             solve5();
             break;
         default:
